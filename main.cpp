@@ -5,7 +5,6 @@
 #include <vector>
 #include "CCell.h"
 
-constexpr int cell_size = 20;
 constexpr int rows_colls = 38;
 constexpr int window_size = 760;
 
@@ -29,12 +28,15 @@ int main() {
     SetTargetFPS(60);
 
 
-    std::vector<CCell> grid;
-    std::stack<int> dfs_stack;
+    std::vector<CCell> grid; //graph
+    std::stack<int> dfs_stack; //stack of indexes
 
 
-
-
+    for (int i = 0; i < rows_colls; ++i) {
+        for (int j = 0; j < rows_colls ; ++j) {
+            grid.emplace_back(CCell(i,j));
+        }
+    }
 
 
 
@@ -42,7 +44,12 @@ int main() {
         BeginDrawing();
         ClearBackground(WHITE);
 
-
+        /*for (auto& cell : grid) {
+            cell.visited = true;
+        }
+        for (const auto& cell : grid) {
+            cell.Draw();
+        }*/
         EndDrawing();
     }
     CloseWindow();
