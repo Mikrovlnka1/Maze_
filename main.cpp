@@ -38,36 +38,42 @@ std::vector<int> GetAllUnvisitedNeighbours(const std::vector<CCell>& grid, int c
 {
     std::vector<int> res;
     auto& cell = grid[currentIndex];
-
     const int row = cell.getRow();
     const int col = cell.getCol();
 
     //top neighbourr
     if(row > 0) {
-
+        int topIndex = getIndex(row, col);
+        if(!grid[topIndex].visited) {
+            res.emplace_back(topIndex);
+        }
     }
 
     //right neighbour
     if(col < (rows_colls - 1)) {
-
+        int rightIndex = getIndex(row, col);
+        if(!grid[rightIndex].visited) {
+            res.emplace_back(rightIndex);
+        }
     }
 
     //bottom neighbour
     if(row < (rows_colls - 1)){
-
+        int bottomIndex = getIndex(row, col);
+        if(!grid[bottomIndex].visited) {
+            res.emplace_back(bottomIndex);
+        }
     }
 
     //left neighbour
     if(col > 0) {
-
+        int leftIndex = getIndex(row, col);
+        if(!grid[leftIndex].visited) {
+            res.emplace_back(leftIndex);
+        }
     }
 
-
-
-
-
-
-
+    return res;
 }
 
 int GetRandomNeighbour(const std::vector<int> & neighbours)
@@ -135,7 +141,6 @@ int main() {
     int currentIndex = 0; //starting index of generation
     bool mazeCompleted = false;
     dfs_stack.push(currentIndex);
-
     GraphInit(grid);
 
 
