@@ -24,7 +24,7 @@ void CCell::Draw() const{
         DrawLine(x + cell_size,y, x + cell_size, y + cell_size, BLACK);
     } if(walls[2]) { // bottom
         DrawLine(x ,y + cell_size, x + cell_size, y + cell_size, BLACK);
-    } if(walls[3]) {
+    } if(walls[3]) { //left
         DrawLine(x,y + cell_size, x , y, BLACK);
     }
 

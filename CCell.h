@@ -9,6 +9,8 @@ public:
     CCell(int r, int c);
     void Draw() const;
     void ShowCell() const;
+    [[nodiscard]] int getRow()const {return row;}
+    [[nodiscard]] int getCol()const {return col;}
 
 
     bool walls[4] = {true, true, true, true}; //top, right, bottom, left

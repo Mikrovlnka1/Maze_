@@ -33,6 +33,91 @@ void GraphInit(std::vector<CCell>& grid)
     }
 }
 
+
+std::vector<int> GetAllUnvisitedNeighbours(const std::vector<CCell>& grid, int currentIndex)
+{
+    std::vector<int> res;
+    auto& cell = grid[currentIndex];
+
+    const int row = cell.getRow();
+    const int col = cell.getCol();
+
+    //top neighbourr
+    if(row > 0) {
+
+    }
+
+    //right neighbour
+    if(col < (rows_colls - 1)) {
+
+    }
+
+    //bottom neighbour
+    if(row < (rows_colls - 1)){
+
+    }
+
+    //left neighbour
+    if(col > 0) {
+
+    }
+
+
+
+
+
+
+
+}
+
+int GetRandomNeighbour(const std::vector<int> & neighbours)
+{
+
+}
+
+void DeleteWall(CCell& current, CCell& neighbour)
+{
+
+}
+
+void DFS_Maze(std::vector<CCell>& grid, std::stack<int>& stack, bool& done, int& currentIndex)
+{
+
+    if(stack.empty())
+    {
+        done = true;
+        return;
+    }
+    currentIndex = stack.top();
+    CCell& curr = grid[currentIndex];
+   /* if(!stack.empty()){
+        stack.pop();
+    }*/
+
+    if (curr.visited)
+    {
+        return;
+    }
+    curr.visited = true;
+    std::vector<int> neighbours = GetAllUnvisitedNeighbours(grid, currentIndex);
+
+    if(!neighbours.empty()) {
+        int chosen = GetRandomNeighbour(neighbours);
+
+
+    }
+    else {
+        stack.pop();
+    }
+
+
+
+
+
+
+
+}
+
 void renderMaze(std::vector<CCell>& grid)
 {
     for (auto& cell : grid) {
@@ -47,6 +132,10 @@ int main() {
 
     std::vector<CCell> grid; //graph
     std::stack<int> dfs_stack; //stack of indexes
+    int currentIndex = 0; //starting index of generation
+    bool mazeCompleted = false;
+    dfs_stack.push(currentIndex);
+
     GraphInit(grid);
 
 
@@ -54,9 +143,13 @@ int main() {
         BeginDrawing();
         ClearBackground(WHITE);
         renderMaze(grid);
+        //call dfs and showcell
 
+        if(!mazeCompleted)
+        {
 
-
+            grid[currentIndex].ShowCell();
+        }
 
 
         EndDrawing();
