@@ -21,5 +21,6 @@ set(SOURCE_FILES
 
 add_executable(Maze_
         main.cpp
-        CCell.h)
+        CCell.h
+        CCell.cpp)
 target_link_libraries(${PROJECT_NAME} raylib)
