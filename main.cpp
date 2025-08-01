@@ -5,8 +5,8 @@
 #include <vector>
 #include "CCell.h"
 
-constexpr int rows_colls = 38;
-constexpr int window_size = 760;
+constexpr int rows_colls = 40;
+constexpr int window_size = 800;
 
 
 /**
@@ -20,8 +20,25 @@ int getIndex(int row, int col)
     return row * rows_colls + col;
 }
 
+/**
+ * fill the graph with cells
+ * @param grid graph
+ */
+void GraphInit(std::vector<CCell>& grid)
+{
+    for (int i = 0; i < rows_colls; ++i) {
+        for (int j = 0; j < rows_colls ; ++j) {
+            grid.emplace_back(CCell(i,j));
+        }
+    }
+}
 
-
+void renderMaze(std::vector<CCell>& grid)
+{
+    for (auto& cell : grid) {
+        cell.Draw();
+    }
+}
 
 int main() {
     InitWindow(window_size, window_size, "Mazey Mazeey");
@@ -30,26 +47,18 @@ int main() {
 
     std::vector<CCell> grid; //graph
     std::stack<int> dfs_stack; //stack of indexes
-
-
-    for (int i = 0; i < rows_colls; ++i) {
-        for (int j = 0; j < rows_colls ; ++j) {
-            grid.emplace_back(CCell(i,j));
-        }
-    }
-
+    GraphInit(grid);
 
 
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(WHITE);
+        renderMaze(grid);
 
-        /*for (auto& cell : grid) {
-            cell.visited = true;
-        }
-        for (const auto& cell : grid) {
-            cell.Draw();
-        }*/
+
+
+
+
         EndDrawing();
     }
     CloseWindow();

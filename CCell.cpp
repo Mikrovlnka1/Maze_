@@ -17,6 +17,7 @@ void CCell::Draw() const{
         DrawRectangle(x,y, cell_size, cell_size, RED);
     }
 
+
     if(walls[0]) { //top
         DrawLine(x,y, x + cell_size, y, BLACK);
     }if(walls[1]) { //right
