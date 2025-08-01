@@ -4,9 +4,7 @@
 
 constexpr int cell_size = 20;
 
-CCell::CCell(int r, int c) : row(r), col(c){
-
-}
+CCell::CCell(int r, int c) : row(r), col(c){}
 
 void CCell::Draw() const{
     int x = getCoordinateX();
