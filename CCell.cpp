@@ -35,7 +35,7 @@ void CCell::ShowCell() const{
     //value in pixels
     int x = getCoordinateX();
     int y = getCoordinateY();
-    DrawRectangle(x, y, cell_size-2, cell_size-2, PINK);
+    DrawRectangle(x, y, cell_size-2, cell_size-2, YELLOW);
 }
 
 int CCell::getCoordinateX() const {

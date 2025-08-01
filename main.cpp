@@ -43,7 +43,7 @@ std::vector<int> GetAllUnvisitedNeighbours(const std::vector<CCell>& grid, int c
 
     //top neighbourr
     if(row > 0) {
-        int topIndex = getIndex(row, col);
+        int topIndex = getIndex(row - 1, col);
         if(!grid[topIndex].visited) {
             res.emplace_back(topIndex);
         }
@@ -51,7 +51,7 @@ std::vector<int> GetAllUnvisitedNeighbours(const std::vector<CCell>& grid, int c
 
     //right neighbour
     if(col < (rows_colls - 1)) {
-        int rightIndex = getIndex(row, col);
+        int rightIndex = getIndex(row, col + 1);
         if(!grid[rightIndex].visited) {
             res.emplace_back(rightIndex);
         }
@@ -59,7 +59,7 @@ std::vector<int> GetAllUnvisitedNeighbours(const std::vector<CCell>& grid, int c
 
     //bottom neighbour
     if(row < (rows_colls - 1)){
-        int bottomIndex = getIndex(row, col);
+        int bottomIndex = getIndex(row + 1, col);
         if(!grid[bottomIndex].visited) {
             res.emplace_back(bottomIndex);
         }
@@ -67,7 +67,7 @@ std::vector<int> GetAllUnvisitedNeighbours(const std::vector<CCell>& grid, int c
 
     //left neighbour
     if(col > 0) {
-        int leftIndex = getIndex(row, col);
+        int leftIndex = getIndex(row, col - 1);
         if(!grid[leftIndex].visited) {
             res.emplace_back(leftIndex);
         }
@@ -78,7 +78,8 @@ std::vector<int> GetAllUnvisitedNeighbours(const std::vector<CCell>& grid, int c
 
 int GetRandomNeighbour(const std::vector<int> & neighbours)
 {
-
+    int randomIndex = GetRandomValue(0, static_cast<int>(neighbours.size())-1);
+    return neighbours[randomIndex];
 }
 
 void DeleteWall(CCell& current, CCell& neighbour)
@@ -99,29 +100,16 @@ void DFS_Maze(std::vector<CCell>& grid, std::stack<int>& stack, bool& done, int&
    /* if(!stack.empty()){
         stack.pop();
     }*/
-
-    if (curr.visited)
-    {
-        return;
-    }
     curr.visited = true;
     std::vector<int> neighbours = GetAllUnvisitedNeighbours(grid, currentIndex);
 
     if(!neighbours.empty()) {
         int chosen = GetRandomNeighbour(neighbours);
-
-
+        stack.push(chosen);
     }
     else {
         stack.pop();
     }
-
-
-
-
-
-
-
 }
 
 void renderMaze(std::vector<CCell>& grid)
@@ -152,7 +140,7 @@ int main() {
 
         if(!mazeCompleted)
         {
-
+            DFS_Maze(grid, dfs_stack, mazeCompleted, currentIndex);
             grid[currentIndex].ShowCell();
         }
 
