@@ -12,18 +12,24 @@ void CCell::Draw() const{
 
     if(visited)
     {
-        DrawRectangle(x,y, cell_size, cell_size, RED);
+        DrawRectangle(x,y, cell_size, cell_size, DARKGREEN);
     }
 
 
     if(walls[0]) { //top
-        DrawLine(x,y, x + cell_size, y, BLACK);
+        //DrawLine(x,y, x + cell_size, y, BLACK);
+        DrawLineEx({(float)x, (float)y}, {(float)(x + cell_size), (float)y}, 3.0f, WHITE);
+
     }if(walls[1]) { //right
-        DrawLine(x + cell_size,y, x + cell_size, y + cell_size, BLACK);
+        //DrawLine(x + cell_size,y, x + cell_size, y + cell_size, BLACK);
+        DrawLineEx({(float)x + cell_size, (float)y}, {(float)(x + cell_size), (float)y + cell_size}, 3.0f, WHITE);
+
     } if(walls[2]) { // bottom
-        DrawLine(x ,y + cell_size, x + cell_size, y + cell_size, BLACK);
+        // DrawLine(x ,y + cell_size, x + cell_size, y + cell_size, BLACK);
+        DrawLineEx({(float)x, (float)y + cell_size}, {(float)(x + cell_size), (float)y +cell_size}, 3.0f, WHITE);
     } if(walls[3]) { //left
-        DrawLine(x,y + cell_size, x , y, BLACK);
+        DrawLineEx({(float)x, (float)y + cell_size}, {(float)(x ), (float)y}, 3.0f, WHITE);
+        //DrawLine(x,y + cell_size, x , y, BLACK);
     }
 
 
