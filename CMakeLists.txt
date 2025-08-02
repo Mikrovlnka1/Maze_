@@ -17,10 +17,10 @@ set(BUILD_EXAMPLES OFF CACHE INTERNAL "")
 FetchContent_MakeAvailable(raylib)
 
 set(SOURCE_FILES
-        main.cpp)
+        src/main.cpp)
 
 add_executable(Maze_
-        main.cpp
-        CCell.h
-        CCell.cpp)
+        src/main.cpp
+        src/CCell.h
+        src/CCell.cpp)
 target_link_libraries(${PROJECT_NAME} raylib)

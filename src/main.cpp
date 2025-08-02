@@ -5,8 +5,11 @@
 #include <vector>
 #include "CCell.h"
 
+//amount of cells in rows and cols
 constexpr int rows_colls = 40;
+//size of whole windows
 constexpr int window_size = 800;
+//size of each cell
 constexpr int cell_size = 20;
 
 
@@ -34,7 +37,12 @@ void GraphInit(std::vector<CCell>& grid)
     }
 }
 
-
+/**
+ * find all indexes of Cells that are not visited and are neighbours of current Cell
+ * @param grid
+ * @param currentIndex
+ * @return Vector of indexes
+ */
 std::vector<int> GetAllUnvisitedNeighbours(const std::vector<CCell>& grid, int currentIndex)
 {
     std::vector<int> res;
@@ -73,16 +81,25 @@ std::vector<int> GetAllUnvisitedNeighbours(const std::vector<CCell>& grid, int c
             res.emplace_back(leftIndex);
         }
     }
-
     return res;
 }
 
+/**
+ * choose random neighbour for maze generating
+ * @param neighbours
+ * @return index of random neighbour inside the grid
+ */
 int GetRandomNeighbour(const std::vector<int> & neighbours)
 {
     int randomIndex = GetRandomValue(0, static_cast<int>(neighbours.size())-1);
     return neighbours[randomIndex];
 }
 
+/**
+ * delete walls for maze, between two cells based on relative position of neighbour
+ * @param current
+ * @param neighbour
+ */
 void DeleteWall(CCell& current, CCell& neighbour)
 {
     const int currRow = current.getRow();
@@ -111,9 +128,15 @@ void DeleteWall(CCell& current, CCell& neighbour)
     }
 }
 
+/**
+ * dfs step, main logic of program
+ * @param grid
+ * @param stack
+ * @param done
+ * @param currentIndex
+ */
 void DFS_Maze(std::vector<CCell>& grid, std::stack<int>& stack, bool& done, int& currentIndex)
 {
-
     if(stack.empty())
     {
         done = true;
@@ -121,9 +144,6 @@ void DFS_Maze(std::vector<CCell>& grid, std::stack<int>& stack, bool& done, int&
     }
     currentIndex = stack.top();
     CCell& curr = grid[currentIndex];
-   /* if(!stack.empty()){
-        stack.pop();
-    }*/
     curr.visited = true;
     std::vector<int> neighbours = GetAllUnvisitedNeighbours(grid, currentIndex);
 
@@ -138,7 +158,12 @@ void DFS_Maze(std::vector<CCell>& grid, std::stack<int>& stack, bool& done, int&
     }
 }
 
-
+/**
+ * choosing starting cell for dfs, gets mouse position, converts it into cell position, and getting the index of starting cell inside the grid
+ * @param currentIndex
+ * @param dfs_stack
+ * @param startSelected
+ */
 void HandleInput(int & currentIndex, std::stack<int>& dfs_stack, bool& startSelected){
     if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         Vector2 mousePosition = GetMousePosition();
@@ -153,7 +178,10 @@ void HandleInput(int & currentIndex, std::stack<int>& dfs_stack, bool& startSele
     }
 }
 
-
+/**
+ * Drawing each cell every frame
+ * @param grid
+ */
 void renderMaze(std::vector<CCell>& grid)
 {
     for (auto& cell : grid) {
@@ -169,17 +197,16 @@ int main() {
     std::vector<CCell> grid; //graph
     std::stack<int> dfs_stack; //stack of indexes
     int currentIndex = 0; //starting index of generation
-    bool mazeCompleted = false;
-    //dfs_stack.push(currentIndex);
+    bool mazeCompleted = false; //is dfs finished
+    bool startSelected = false; //did user choose the starting position
     GraphInit(grid);
-    bool startSelected = false;
 
 
+    //main loop
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(WHITE);
         renderMaze(grid);
-        //call dfs and showcell
 
         if(!startSelected){
             DrawText("Choose starting point", 250,380,30,BLACK);
@@ -189,8 +216,6 @@ int main() {
             DFS_Maze(grid, dfs_stack, mazeCompleted, currentIndex);
             grid[currentIndex].ShowCell();
         }
-
-
         EndDrawing();
     }
     CloseWindow();
