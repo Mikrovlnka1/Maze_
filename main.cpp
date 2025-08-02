@@ -7,6 +7,7 @@
 
 constexpr int rows_colls = 40;
 constexpr int window_size = 800;
+constexpr int cell_size = 20;
 
 
 /**
@@ -137,6 +138,22 @@ void DFS_Maze(std::vector<CCell>& grid, std::stack<int>& stack, bool& done, int&
     }
 }
 
+
+void HandleInput(int & currentIndex, std::stack<int>& dfs_stack, bool& startSelected){
+    if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        Vector2 mousePosition = GetMousePosition();
+        int col = static_cast<int>(mousePosition.x) / cell_size;
+        int row = static_cast<int>(mousePosition.y) / cell_size;
+
+        if(col>= 0 && col < rows_colls && row>=0 && row < rows_colls){
+            currentIndex = getIndex(row, col);
+            dfs_stack.push(currentIndex);
+            startSelected = true;
+        }
+    }
+}
+
+
 void renderMaze(std::vector<CCell>& grid)
 {
     for (auto& cell : grid) {
@@ -153,8 +170,9 @@ int main() {
     std::stack<int> dfs_stack; //stack of indexes
     int currentIndex = 0; //starting index of generation
     bool mazeCompleted = false;
-    dfs_stack.push(currentIndex);
+    //dfs_stack.push(currentIndex);
     GraphInit(grid);
+    bool startSelected = false;
 
 
     while(!WindowShouldClose()){
@@ -163,8 +181,11 @@ int main() {
         renderMaze(grid);
         //call dfs and showcell
 
-        if(!mazeCompleted)
-        {
+        if(!startSelected){
+            DrawText("Choose starting point", 250,380,30,BLACK);
+            HandleInput(currentIndex, dfs_stack, startSelected);
+        }
+        else if(!mazeCompleted) {
             DFS_Maze(grid, dfs_stack, mazeCompleted, currentIndex);
             grid[currentIndex].ShowCell();
         }
