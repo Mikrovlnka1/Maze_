@@ -44,7 +44,7 @@ std::vector<int> GetAllUnvisitedNeighbours(const std::vector<CCell>& grid, int c
     //top neighbourr
     if(row > 0) {
         int topIndex = getIndex(row - 1, col);
-        if(!grid[topIndex].visited) {
+        if(!grid[topIndex].visited) { //check if the cell is visited
             res.emplace_back(topIndex);
         }
     }
@@ -84,7 +84,30 @@ int GetRandomNeighbour(const std::vector<int> & neighbours)
 
 void DeleteWall(CCell& current, CCell& neighbour)
 {
+    const int currRow = current.getRow();
+    const int currCol = current.getCol();
 
+    const int nextRow = neighbour.getRow();
+    const int nextCol = neighbour.getCol();
+
+    //next is top neighbour
+    if(currRow - 1 == nextRow){
+        current.walls[0] = false;
+        neighbour.walls[2] = false;
+    }
+    //next is bot neighbour
+    if(currRow  == nextRow - 1){
+        current.walls[2] = false;
+        neighbour.walls[0] = false;
+    }
+    //next is right neighbourr
+    if(currCol == nextCol - 1){
+        current.walls[1] = false;
+        neighbour.walls[3] = false;
+    }if(currCol - 1 == nextCol){
+        current.walls[3] = false;
+        neighbour.walls[1] = false;
+    }
 }
 
 void DFS_Maze(std::vector<CCell>& grid, std::stack<int>& stack, bool& done, int& currentIndex)
@@ -105,6 +128,8 @@ void DFS_Maze(std::vector<CCell>& grid, std::stack<int>& stack, bool& done, int&
 
     if(!neighbours.empty()) {
         int chosen = GetRandomNeighbour(neighbours);
+        CCell& next = grid[chosen];
+        DeleteWall(curr, next);
         stack.push(chosen);
     }
     else {
