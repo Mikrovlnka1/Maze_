@@ -6,6 +6,10 @@ constexpr int cell_size = 20;
 
 CCell::CCell(int r, int c) : row(r), col(c){}
 
+
+/**
+ * method for drawing the cell with walls based on bool values
+ */
 void CCell::Draw() const{
     int x = getCoordinateX();
     int y = getCoordinateY();
@@ -31,11 +35,10 @@ void CCell::Draw() const{
         DrawLineEx({(float)x, (float)y + cell_size}, {(float)(x ), (float)y}, 3.0f, WHITE);
         //DrawLine(x,y + cell_size, x , y, BLACK);
     }
-
-
-
 }
 
+
+//method for highlighting the current cell, for better visual
 void CCell::ShowCell() const{
 
     //value in pixels
@@ -44,6 +47,7 @@ void CCell::ShowCell() const{
     DrawRectangle(x, y, cell_size-2, cell_size-2, YELLOW);
 }
 
+//pixel values for Raylib drawing methods
 int CCell::getCoordinateX() const {
     return col * cell_size;
 }
