@@ -7,6 +7,7 @@
 #include "queue"
 #include "set"
 #include "map"
+#include "exception"
 
 
 //amount of cells in rows and cols
@@ -168,24 +169,45 @@ void DFS_Maze(std::vector<CCell>& grid, std::stack<int>& stack, bool& done, int&
  * @param dfs_stack
  * @param startSelected
  */
-void HandleInput(int & currentIndex, std::stack<int>& dfs_stack, bool& startSelected){
+
+int ProcessInput() {
     if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         Vector2 mousePosition = GetMousePosition();
         int col = static_cast<int>(mousePosition.x) / cell_size;
         int row = static_cast<int>(mousePosition.y) / cell_size;
 
         if(col>= 0 && col < rows_colls && row>=0 && row < rows_colls){
-            if(!startSelected) {
-                currentIndex = getIndex(row, col);
-                dfs_stack.push(currentIndex);
-                startSelected = true;
-            }
-            else {
-                // bfs
-            }
+            return getIndex(row, col);
+        }
+        else {
+            return -1;
         }
     }
+    return -1;
 }
+
+void HandleDfsInput(int & currentIndex, std::stack<int>& dfs_stack, bool& startSelected){
+    //add exception if -1
+    currentIndex = ProcessInput();
+    if(currentIndex != -1) {
+        dfs_stack.push(currentIndex);
+        startSelected = true;
+    }
+}
+
+void HandleBfsInput(int & bfsStart, int & bfsEnd){
+
+    int clicked = ProcessInput();
+    if(clicked == -1) return;
+
+    if(bfsStart == -1){
+        bfsStart =clicked;
+    }
+    else if (bfsEnd == -1){
+        bfsEnd = clicked;
+    }
+}
+
 
 
 void BFS_path(){
@@ -216,8 +238,8 @@ int main() {
     bool startSelected = false; //did user choose the starting position
 
     //bfs for path finding
-    int startIndex = 0;
-    int endIndex = 0;
+    int bfsStart = -1; //-1 means it wasnt chosen yet
+    int bfsEnd = -1;
     bool pathFound = true;
     std::queue<int> queue;
     std::set<int> visited;
@@ -232,15 +254,21 @@ int main() {
 
         if(!startSelected){
             DrawText("Choose starting point", 250,380,30,BLACK);
-            HandleInput(currentIndex, dfs_stack, startSelected);
+            HandleDfsInput(currentIndex, dfs_stack, startSelected);
         }
         else if(!mazeCompleted) {
             DFS_Maze(grid, dfs_stack, mazeCompleted, currentIndex);
             grid[currentIndex].ShowCell();
         }
         else {
-            DrawText("Choose START", 250,380,40,YELLOW);
-
+            if(bfsStart == -1) {
+                DrawText("Choose START", 250,380,40,YELLOW);
+                HandleBfsInput( bfsStart, bfsEnd);
+            }
+            else if (bfsEnd == -1){
+                DrawText("Choose END", 250,380,40,YELLOW);
+                HandleBfsInput( bfsStart, bfsEnd);
+            }
         }
         EndDrawing();
     }
