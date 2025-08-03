@@ -16,6 +16,7 @@ public:
     bool walls[4] = {true, true, true, true}; //top, right, bottom, left
     bool visited = false;
     bool found = false; //found path indicator
+    bool visitedByBfs = false;
 private:
     [[nodiscard]] int getCoordinateX() const;
     [[nodiscard]] int getCoordinateY() const;

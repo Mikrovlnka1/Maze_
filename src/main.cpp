@@ -4,6 +4,10 @@
 #include <stack>
 #include <vector>
 #include "CCell.h"
+#include "queue"
+#include "set"
+#include "map"
+
 
 //amount of cells in rows and cols
 constexpr int rows_colls = 40;
@@ -171,11 +175,22 @@ void HandleInput(int & currentIndex, std::stack<int>& dfs_stack, bool& startSele
         int row = static_cast<int>(mousePosition.y) / cell_size;
 
         if(col>= 0 && col < rows_colls && row>=0 && row < rows_colls){
-            currentIndex = getIndex(row, col);
-            dfs_stack.push(currentIndex);
-            startSelected = true;
+            if(!startSelected) {
+                currentIndex = getIndex(row, col);
+                dfs_stack.push(currentIndex);
+                startSelected = true;
+            }
+            else {
+                // bfs
+            }
         }
     }
+}
+
+
+void BFS_path(){
+
+
 }
 
 /**
@@ -199,8 +214,15 @@ int main() {
     int currentIndex = 0; //starting index of generation
     bool mazeCompleted = false; //is dfs finished
     bool startSelected = false; //did user choose the starting position
-    GraphInit(grid);
 
+    //bfs for path finding
+    int startIndex = 0;
+    int endIndex = 0;
+    bool pathFound = true;
+    std::queue<int> queue;
+    std::set<int> visited;
+    std::map<int, int> cameFrom;
+    GraphInit(grid);
 
     //main loop
     while(!WindowShouldClose()){
@@ -215,6 +237,10 @@ int main() {
         else if(!mazeCompleted) {
             DFS_Maze(grid, dfs_stack, mazeCompleted, currentIndex);
             grid[currentIndex].ShowCell();
+        }
+        else {
+            DrawText("Choose START", 250,380,40,YELLOW);
+
         }
         EndDrawing();
     }
