@@ -164,13 +164,11 @@ void DFS_Maze(std::vector<CCell>& grid, std::stack<int>& stack, bool& done, int&
     }
 }
 
-/**
- * choosing starting cell for dfs, gets mouse position, converts it into cell position, and getting the index of starting cell inside the grid
- * @param currentIndex
- * @param dfs_stack
- * @param startSelected
- */
 
+/**
+ * acknowledge the press of mouse button, used in handleinput functions
+ * @return
+ */
 int ProcessInput() {
     if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         Vector2 mousePosition = GetMousePosition();
@@ -187,6 +185,12 @@ int ProcessInput() {
     return -1;
 }
 
+/**
+ * choosing starting cell for DFS maze generating, gets mouse position, converts it into cell position, and getting the index of starting cell inside the grid
+ * @param currentIndex
+ * @param dfs_stack
+ * @param startSelected
+ */
 void HandleDfsInput(int & currentIndex, std::stack<int>& dfs_stack, bool& startSelected){
     currentIndex = ProcessInput();
     if(currentIndex != -1) { //start was selected
@@ -194,7 +198,11 @@ void HandleDfsInput(int & currentIndex, std::stack<int>& dfs_stack, bool& startS
         startSelected = true;
     }
 }
-
+/**
+ * used for BFS pathfinding, sets the start and the end for bfs
+ * @param bfsStart
+ * @param bfsEnd
+ */
 void HandleBfsInput(int & bfsStart, int & bfsEnd){
 
     int clicked = ProcessInput();
@@ -207,8 +215,17 @@ void HandleBfsInput(int & bfsStart, int & bfsEnd){
     }
 }
 
-
-
+/**
+ * BFS step, pathfinding from start to end, finds the path in maze
+ * @param grid
+ * @param queue
+ * @param visited
+ * @param cameFrom
+ * @param res
+ * @param startIndex
+ * @param endIndex
+ * @param bfsFinished
+ */
 void BFS_path(std::vector<CCell>& grid, std::queue<int>& queue, std::set<int>& visited, std::map<int, int>& cameFrom, std::vector<int> & res, int startIndex, int endIndex, bool & bfsFinished)
 {
     if(queue.empty()) {
@@ -327,7 +344,7 @@ int main() {
             else if (bfsEnd == -1){
                 DrawText("Choose END", 250,380,40,YELLOW);
                 HandleBfsInput( bfsStart, bfsEnd);
-                if (queue.empty()) {
+                if (queue.empty()) { //to push it only once
                     queue.push(bfsStart);
                     visited.insert(bfsStart);
                 }
