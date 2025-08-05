@@ -19,6 +19,12 @@ void CCell::Draw() const{
         DrawRectangle(x,y, cell_size, cell_size, DARKGREEN);
     }
 
+    if(visitedByBfs){
+        DrawRectangle(x,y, cell_size, cell_size, PURPLE);
+    }
+    if(found){
+        DrawRectangle(x,y, cell_size, cell_size, ORANGE);
+    }
 
     if(walls[0]) { //top
         //DrawLine(x,y, x + cell_size, y, BLACK);

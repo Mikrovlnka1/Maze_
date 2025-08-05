@@ -8,6 +8,7 @@
 #include "set"
 #include "map"
 #include "exception"
+#include "algorithm"
 
 
 //amount of cells in rows and cols
@@ -187,9 +188,8 @@ int ProcessInput() {
 }
 
 void HandleDfsInput(int & currentIndex, std::stack<int>& dfs_stack, bool& startSelected){
-    //add exception if -1
     currentIndex = ProcessInput();
-    if(currentIndex != -1) {
+    if(currentIndex != -1) { //start was selected
         dfs_stack.push(currentIndex);
         startSelected = true;
     }
@@ -198,8 +198,7 @@ void HandleDfsInput(int & currentIndex, std::stack<int>& dfs_stack, bool& startS
 void HandleBfsInput(int & bfsStart, int & bfsEnd){
 
     int clicked = ProcessInput();
-    if(clicked == -1) return;
-
+    if(clicked == -1) return; //noting should happen
     if(bfsStart == -1){
         bfsStart =clicked;
     }
@@ -210,9 +209,67 @@ void HandleBfsInput(int & bfsStart, int & bfsEnd){
 
 
 
-void BFS_path(){
+void BFS_path(std::vector<CCell>& grid, std::queue<int>& queue, std::set<int>& visited, std::map<int, int>& cameFrom, std::vector<int> & res, int startIndex, int endIndex, bool & bfsFinished)
+{
+    if(queue.empty()) {
+        bfsFinished = true;
+        return;
+    }
+
+    int currentIndex = queue.front();
+    queue.pop();
+    CCell & currentCell = grid[currentIndex];
+    currentCell.visitedByBfs = true;
 
 
+    if(currentIndex == endIndex){
+        int at = endIndex;
+        res.emplace_back(at);
+
+        while (at != startIndex){
+            if(cameFrom.contains(at)){
+                at = cameFrom[at];
+                res.emplace_back(at);
+            }
+            else{
+                at = -1;
+                break;
+            }
+        }
+        std::reverse(res.begin(), res.end());
+        bfsFinished = true;
+        for (int idx : res) {
+            grid[idx].found = true;
+        }
+        return;
+    }
+
+
+    const std::vector<std::pair<int, int>> directions = {
+            {-1, 0}, {0, 1}, {1, 0}, {0, -1}
+    };
+
+
+
+    for (int i=0; i < 4; ++i) {
+        const auto [x,y] = directions[i];
+        int newRow =  currentCell.getRow() + x;
+        int newCol = currentCell.getCol() + y;
+
+        if(newRow < 0 || newRow >= rows_colls || newCol < 0 || newCol >= rows_colls)
+            continue;
+
+        int neighbour = getIndex(newRow, newCol);
+
+        if(currentCell.walls[i]){ //there is wall between cells -> cant go through that
+            continue;
+        }
+        if(!visited.contains(neighbour)){
+            visited.insert(neighbour);
+            queue.push(neighbour);
+            cameFrom[neighbour] = currentIndex;
+        }
+    }
 }
 
 /**
@@ -244,6 +301,8 @@ int main() {
     std::queue<int> queue;
     std::set<int> visited;
     std::map<int, int> cameFrom;
+    std::vector<int> finalPath;
+    bool bfsFinished = false;
     GraphInit(grid);
 
     //main loop
@@ -251,7 +310,7 @@ int main() {
         BeginDrawing();
         ClearBackground(WHITE);
         renderMaze(grid);
-
+        std::cout << "Queue size: " << queue.size() << "\n";
         if(!startSelected){
             DrawText("Choose starting point", 250,380,30,BLACK);
             HandleDfsInput(currentIndex, dfs_stack, startSelected);
@@ -266,8 +325,15 @@ int main() {
                 HandleBfsInput( bfsStart, bfsEnd);
             }
             else if (bfsEnd == -1){
+                queue.push(bfsStart);
+                visited.insert(bfsStart);
                 DrawText("Choose END", 250,380,40,YELLOW);
                 HandleBfsInput( bfsStart, bfsEnd);
+
+
+            }
+            else if(bfsEnd != -1 && !bfsFinished){
+                BFS_path(grid, queue, visited, cameFrom, finalPath, bfsStart, bfsEnd, bfsFinished);
             }
         }
         EndDrawing();
