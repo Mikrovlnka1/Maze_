@@ -62,3 +62,10 @@ int CCell::getCoordinateY() const {
     return row * cell_size;
 }
 
+void CCell::DrawArrowBetween(const CCell &from, const CCell &to) {
+    Vector2 start = {(float)from.getCoordinateX() + cell_size / 2.0f, (float)from.getCoordinateY() + cell_size / 2.0f};
+    Vector2 end = {(float)to.getCoordinateX() + cell_size / 2.0f, (float)to.getCoordinateY() + cell_size / 2.0f};
+    DrawLineEx(start, end, 2.5f, RED);
+}
+
+

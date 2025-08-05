@@ -236,6 +236,7 @@ void BFS_path(std::vector<CCell>& grid, std::queue<int>& queue, std::set<int>& v
                 break;
             }
         }
+        res.emplace_back(startIndex);
         std::reverse(res.begin(), res.end());
         bfsFinished = true;
         for (int idx : res) {
@@ -244,7 +245,7 @@ void BFS_path(std::vector<CCell>& grid, std::queue<int>& queue, std::set<int>& v
         return;
     }
 
-
+    //vector for all possible directions , top right bottom left, the order will be like this for simplified way of determinign the existence of  wall
     const std::vector<std::pair<int, int>> directions = {
             {-1, 0}, {0, 1}, {1, 0}, {0, -1}
     };
@@ -261,7 +262,7 @@ void BFS_path(std::vector<CCell>& grid, std::queue<int>& queue, std::set<int>& v
 
         int neighbour = getIndex(newRow, newCol);
 
-        if(currentCell.walls[i]){ //there is wall between cells -> cant go through that
+        if(currentCell.walls[i]){ //there is wall between cells -> cant go through that, we can make it like it, because of our directions vector
             continue;
         }
         if(!visited.contains(neighbour)){
@@ -310,7 +311,6 @@ int main() {
         BeginDrawing();
         ClearBackground(WHITE);
         renderMaze(grid);
-        std::cout << "Queue size: " << queue.size() << "\n";
         if(!startSelected){
             DrawText("Choose starting point", 250,380,30,BLACK);
             HandleDfsInput(currentIndex, dfs_stack, startSelected);
@@ -325,14 +325,14 @@ int main() {
                 HandleBfsInput( bfsStart, bfsEnd);
             }
             else if (bfsEnd == -1){
-                queue.push(bfsStart);
-                visited.insert(bfsStart);
                 DrawText("Choose END", 250,380,40,YELLOW);
                 HandleBfsInput( bfsStart, bfsEnd);
-
-
+                if (queue.empty()) {
+                    queue.push(bfsStart);
+                    visited.insert(bfsStart);
+                }
             }
-            else if(bfsEnd != -1 && !bfsFinished){
+            else if(bfsEnd != -1 && !bfsFinished){ //start bfs
                 BFS_path(grid, queue, visited, cameFrom, finalPath, bfsStart, bfsEnd, bfsFinished);
             }
         }
