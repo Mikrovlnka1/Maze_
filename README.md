@@ -39,4 +39,4 @@ This project is a simple and interactive maze generator and pathfinding visualiz
 
 
 ---
-
+![Demo](assets/demo.gif)
